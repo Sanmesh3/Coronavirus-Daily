@@ -2,9 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 import smtplib
 import time
+import operator
 
 
-def corona():
+def coronavirus():
     url = "https://www.worldometers.info/coronavirus/"
 
     headers = {"User-Agent": 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/537.36 (KHTML, like Gecko) '
@@ -14,24 +15,42 @@ def corona():
 
     soup = BeautifulSoup(page.content, 'html.parser')
 
-    Data = soup.find(id='main_table_countries_today').get_text().strip().split()
+    lines = soup.find(id='main_table_countries_today').get_text()
+    # print(lines)
+
+    Data = lines.split("\n")
+    del Data[:17]
     # print(Data)
 
     table = dict()
-    x = 13
-    for _ in range(10):
+    x = 0
+    for _ in range(206):
         table[Data[x]] = [Data[x+1], Data[x+3]]
-        x += 10
+        x += 12
     # print(table)
 
-    print("{:<15} {:<10} {:<10} {:<10}".format("Country", "Cases", "Deaths", "DeathRate"))
-    for key, value in table.items():
+    for key in table.keys():
+        table[key][0] = int(table[key][0].replace(",", ""))
+        table[key][1] = table[key][1].strip().replace(",", "")
+        if table[key][1] == '':
+            table[key][1] = "0"
+        table[key][1] = int(table[key][1])
+        # print(table[key])
+    # print(table)
+    sorted_table = sorted(table.items(), key=operator.itemgetter(1), reverse=True)
+    # print(sorted_table)
+
+    print("{:<7} {:<25} {:<15} {:<10} {:<10}".format("Rank", "Country, Other",
+          "Infections", "Deaths", "Mortality"))
+    rank = 1
+    for key, value in sorted_table:
         z = key
         a, b = value
-        print("{:<15} {:<10} {:<10} {:5.2f} %".format(z, a, b,
-             (int(b.replace(",", "")) / int(a.replace(",",  "")) * 100)))
+        print("# {:<5} {:<25} {:<15} {:<10} {:5.2f} %".format(rank, z, a, b,
+             (b / a * 100)))
+        rank += 1
 
 
-if __name__ == "__main__":
-    corona()
-    # time.sleep(60*24)
+while True:
+    coronavirus()
+    time.sleep(60*60)
