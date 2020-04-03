@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 import smtplib
-import time
 import operator
 
 
@@ -45,6 +44,5 @@ def coronavirus():
         rank += 1
 
 
-while True:
+if __name__ == "__main__":
     coronavirus()
-    time.sleep(60*60*24)
