@@ -25,17 +25,11 @@ def coronavirus():
     table = dict()
     x = 0
     for _ in range(206):
-        table[Data[x]] = [Data[x+1], Data[x+3]]
+        b = Data[x+3].strip().replace(",", "")
+        if b == "":
+            b = "0"
+        table[Data[x]] = [int(Data[x+1].replace(",", "")), int(b)]
         x += 12
-    # print(table)
-
-    for key in table.keys():
-        table[key][0] = int(table[key][0].replace(",", ""))
-        table[key][1] = table[key][1].strip().replace(",", "")
-        if table[key][1] == '':
-            table[key][1] = "0"
-        table[key][1] = int(table[key][1])
-        # print(table[key])
     # print(table)
     sorted_table = sorted(table.items(), key=operator.itemgetter(1), reverse=True)
     # print(sorted_table)
@@ -53,4 +47,4 @@ def coronavirus():
 
 while True:
     coronavirus()
-    time.sleep(60*60)
+    time.sleep(60*60*24)
