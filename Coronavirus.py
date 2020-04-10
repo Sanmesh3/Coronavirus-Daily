@@ -18,17 +18,18 @@ def coronavirus():
     # print(lines)
 
     Data = lines.split("\n")
-    del Data[:17]
+    del Data[:156]
     # print(Data)
 
     table = dict()
     x = 0
-    for _ in range(206):
+    for _ in range(212):
+        a = Data[x+1].replace(",", "")
         b = Data[x+3].strip().replace(",", "")
         if b == "":
             b = "0"
-        table[Data[x]] = [int(Data[x+1].replace(",", "")), int(b)]
-        x += 12
+        table[Data[x]] = [int(a), int(b)]
+        x += 15
     # print(table)
     sorted_table = sorted(table.items(), key=operator.itemgetter(1), reverse=True)
     # print(sorted_table)
@@ -39,8 +40,9 @@ def coronavirus():
     for key, value in sorted_table:
         z = key
         a, b = value
-        print("# {:<5} {:<25} {:<15} {:<10} {:5.2f} %".format(rank, z, a, b,
-             (b / a * 100)))
+        print("# {:<5} {:<25} {:<15,.0f} {:<10,.0f} {:5.2f} %".format(rank, z,
+                                                                      a, b,
+                                                                      (b / a * 100)))
         rank += 1
 
 
